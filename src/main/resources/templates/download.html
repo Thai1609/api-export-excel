@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Download File Excel</title>
+	<link rel="stylesheet" href="/css/style.css"> <!-- Optional: Add styles -->
+	<script>
+		function downloadFileAndRedirect(button) {
+			// Retrieve the filename from the data-filename attribute
+			const fileName = button.getAttribute('data-filename');
+			if (fileName) {
+				const link = document.createElement('a');
+				link.href = `/files/${fileName}`;
+				link.download = fileName;
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+
+				setTimeout(() => {
+					window.location.href = "/upload";
+				}, 1000);
+			} else {
+				alert("File name is not available.");
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<div th:if="${fileName}">
+			<h1>File Uploaded Successfully!</h1>
+			<p>The file <strong th:text="${fileName}"></strong> has been successfully uploaded.</p>
+			<button th:attr="data-filename=${fileName}" onclick="downloadFileAndRedirect(this)">Download File</button>
+
+		</div>
+	</div>
+</body>
+
+</html>
