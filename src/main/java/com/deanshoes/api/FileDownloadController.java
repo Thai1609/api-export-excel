@@ -30,6 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.deanshoes.domain.Sheet1;
 import com.deanshoes.domain.Sheet2;
 import com.deanshoes.domain.Sheet3;
+import com.deanshoes.domain.Sheet3Temp;
 
 @Controller
 public class FileDownloadController {
@@ -38,6 +39,7 @@ public class FileDownloadController {
 	Map<Integer, Sheet1> step1Map = null;
 	Map<Integer, Sheet2> step2Map = null;
 	Map<Integer, Sheet3> step3Map = null;
+	Map<Integer, Sheet3Temp> step3TempMap = null;
 
 	@GetMapping("/files/{filename:.+}")
 	public ResponseEntity<Resource> read_EditAndDownloadExcelFile(@PathVariable String filename,
@@ -58,6 +60,7 @@ public class FileDownloadController {
 			step1Map = new HashMap<>();
 			step2Map = new HashMap<>();
 			step3Map = new HashMap<>();
+			step3TempMap = new HashMap<>();
 			// Modify the first sheet
 
 			Sheet sheet = workbook.getSheetAt(2);
@@ -78,18 +81,27 @@ public class FileDownloadController {
 				System.out.println(step1);
 			}
 
+			int keyTempSheet3 = 0;
 			for (Sheet3 step3 : step3Map.values()) {
-//				System.out.println("Sheet3 PO: " + step3.getPo());
-				
 				for (Sheet2 step2 : step2Map.values()) {
 					if (step2.getPO().equals(step3.getPo())) {
-						System.out.println("Sheet2 MRP: " + step2.getMRP());
-//						for (Sheet1 step1 : step1Map.values()) {
-//							if (step1.getConsolidated_Master_Order().equals(step2.getMRP())) {
-//								System.out.println("Sheet1 order: " + step1.getOrder() + " ,Sheet1 material: "
-//										+ step1.getMaterial());
-//							}
-//						}
+						for (Sheet1 step1 : step1Map.values()) {
+							if (step1.getConsolidated_Master_Order().equals(step2.getMRP())) {
+								keyTempSheet3++;
+								step3.setInternal_code(step1.getMaterial());
+								step3.setStyle(step1.getOrder());
+
+								putIfNotDuplicateValueSheet3Temp(keyTempSheet3,
+										new Sheet3Temp(step3.getDate(), step3.getInternal_code(), step3.getOrde_type(),
+												step3.getStyle(), step3.getModel_name(), step3.getDestination(),
+												step3.getPrs(), step3.getEta(), step3.getUsage(), step3.getOrder_qty(),
+												step3.getPo(), step3.getVendor_name(), step3.getMtl_code(),
+												step3.getMaterial_name(), step3.getUnit(), step3.getPrice(),
+												step3.getEtd()));
+
+// 								
+							}
+						}
 					}
 				}
 			}
@@ -98,79 +110,75 @@ public class FileDownloadController {
 			Row row3 = null;
 			Cell cell3 = null;
 			int rowNum3 = 8, cellNum3 = 0;
-
-			// Shift rows below the insertion point (if you need to make space)
-			// sheet.shiftRows(rowNum, sheet.getLastRowNum(), 1);
-			for (Sheet3 step3 : step3Map.values()) {
+			for (Sheet3Temp step3temp : step3TempMap.values()) {
 				row3 = sheet.createRow(rowNum3);
+				//
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getDate());
+				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
-				cell3.setCellValue(step3.getDate());
+				cell3.setCellValue(step3temp.getInternal_code());
 				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getInternal_code());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getOrde_type());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getStyle());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getModel_name());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getPrs());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getEta());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getUsage());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getOrder_qty());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getPo());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getVendor_name());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getMtl_code());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getMaterial_name());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getUnit());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getPrice());
-//				cellNum3++;
-//
-//				cell3 = row3.createCell(cellNum3);
-//				cell3.setCellValue(step3.getEtd());
-//
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getOrde_type());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getStyle());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getModel_name());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getPrs());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getEta());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getUsage());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getOrder_qty());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getPo());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getVendor_name());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getMtl_code());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getMaterial_name());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getUnit());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getPrice());
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getEtd());
+
 				rowNum3++;
 				cellNum3 = 0;
 			}
-
 			// Write the updated workbook back to the file
 			try (FileOutputStream fileOutputStream = new FileOutputStream(excelFile)) {
 				workbook.write(fileOutputStream); // Save the changes
@@ -368,9 +376,9 @@ public class FileDownloadController {
 		}
 	}
 
-	public void putIfNotDuplicateValueSheet1(Integer key, Sheet1 value) {
-		if (!step1Map.containsValue(value)) {
-			step1Map.put(key, value);
+	public void putIfNotDuplicateValueSheet3Temp(Integer key, Sheet3Temp value) {
+		if (!step3TempMap.containsValue(value)) {
+			step3TempMap.put(key, value);
 		}
 	}
 

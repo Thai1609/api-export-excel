@@ -2,7 +2,7 @@ package com.deanshoes.domain;
 
 import java.util.Objects;
 
-public class Sheet3 {
+public class Sheet3Temp {
 	private String date;
 	private String internal_code;
 	private String orde_type;
@@ -21,7 +21,7 @@ public class Sheet3 {
 	private String price;
 	private String etd;
 
-	public Sheet3(String date, String internal_code, String orde_type, String style, String model_name,
+	public Sheet3Temp(String date, String internal_code, String orde_type, String style, String model_name,
 			String destination, String prs, String eta, String usage, String order_qty, String po, String vendor_name,
 			String mtl_code, String material_name, String unit, String price, String etd) {
 		super();
@@ -181,8 +181,24 @@ public class Sheet3 {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Sheet3Temp sheet3 = (Sheet3Temp) o;
+		return Objects.equals(internal_code, sheet3.internal_code) && Objects.equals(style, sheet3.style)
+				&& Objects.equals(order_qty, sheet3.order_qty);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(internal_code, style, order_qty);
+	}
+
+	@Override
 	public String toString() {
-		return "Sheet3 [date=" + date + ", internal_code=" + internal_code + ", orde_type=" + orde_type + ", style="
+		return "Sheet3Temp [date=" + date + ", internal_code=" + internal_code + ", orde_type=" + orde_type + ", style="
 				+ style + ", model_name=" + model_name + ", destination=" + destination + ", prs=" + prs + ", eta="
 				+ eta + ", usage=" + usage + ", order_qty=" + order_qty + ", po=" + po + ", vendor_name=" + vendor_name
 				+ ", mtl_code=" + mtl_code + ", material_name=" + material_name + ", unit=" + unit + ", price=" + price
