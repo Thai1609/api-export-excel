@@ -1,7 +1,5 @@
 package com.deanshoes.domain;
 
-import java.util.Objects;
-
 public class Sheet1 {
 	private String order;
 	private String material;

@@ -12,14 +12,14 @@
 			const fileName = button.getAttribute('data-filename');
 			if (fileName) {
 				const link = document.createElement('a');
-				link.href = `/files/${fileName}`;
+				link.href = `/api-export-excel/files/${fileName}`;
 				link.download = fileName;
 				document.body.appendChild(link);
 				link.click();
 				document.body.removeChild(link);
 
 				setTimeout(() => {
-					window.location.href = "/upload";
+					window.location.href = "/api-export-excel/upload";
 				}, 1000);
 			} else {
 				alert("File name is not available.");

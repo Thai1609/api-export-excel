@@ -1,11 +1,9 @@
 package com.deanshoes.domain;
 
-import java.util.Objects;
-
 public class Sheet3 {
 	private String date;
 	private String internal_code;
-	private String orde_type;
+	private String order_type;
 	private String style;
 	private String model_name;
 	private String destination;
@@ -21,13 +19,13 @@ public class Sheet3 {
 	private String price;
 	private String etd;
 
-	public Sheet3(String date, String internal_code, String orde_type, String style, String model_name,
+	public Sheet3(String date, String internal_code, String order_type, String style, String model_name,
 			String destination, String prs, String eta, String usage, String order_qty, String po, String vendor_name,
 			String mtl_code, String material_name, String unit, String price, String etd) {
 		super();
 		this.date = date;
 		this.internal_code = internal_code;
-		this.orde_type = orde_type;
+		this.order_type = order_type;
 		this.style = style;
 		this.model_name = model_name;
 		this.destination = destination;
@@ -60,12 +58,12 @@ public class Sheet3 {
 		this.internal_code = internal_code;
 	}
 
-	public String getOrde_type() {
-		return orde_type;
+	public String getOrder_type() {
+		return order_type;
 	}
 
-	public void setOrde_type(String orde_type) {
-		this.orde_type = orde_type;
+	public void setOrder_type(String order_type) {
+		this.order_type = order_type;
 	}
 
 	public String getStyle() {
@@ -182,7 +180,7 @@ public class Sheet3 {
 
 	@Override
 	public String toString() {
-		return "Sheet3 [date=" + date + ", internal_code=" + internal_code + ", orde_type=" + orde_type + ", style="
+		return "Sheet3 [date=" + date + ", internal_code=" + internal_code + ", order_type=" + order_type + ", style="
 				+ style + ", model_name=" + model_name + ", destination=" + destination + ", prs=" + prs + ", eta="
 				+ eta + ", usage=" + usage + ", order_qty=" + order_qty + ", po=" + po + ", vendor_name=" + vendor_name
 				+ ", mtl_code=" + mtl_code + ", material_name=" + material_name + ", unit=" + unit + ", price=" + price

@@ -11,12 +11,14 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -25,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.deanshoes.domain.Sheet1;
@@ -33,8 +36,9 @@ import com.deanshoes.domain.Sheet3;
 import com.deanshoes.domain.Sheet3Temp;
 
 @Controller
+@RequestMapping("/api-export-excel")
 public class FileDownloadController {
-
+	DataFormatter dataFormatter = new DataFormatter();
 	private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads";
 	Map<Integer, Sheet1> step1Map = null;
 	Map<Integer, Sheet2> step2Map = null;
@@ -56,12 +60,17 @@ public class FileDownloadController {
 		// Load the Excel file
 
 		try (FileInputStream fileInputStream = new FileInputStream(excelFile);
-				Workbook workbook = new XSSFWorkbook(fileInputStream)) {
+				XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream)) {
 			step1Map = new HashMap<>();
 			step2Map = new HashMap<>();
 			step3Map = new HashMap<>();
 			step3TempMap = new HashMap<>();
 			// Modify the first sheet
+			XSSFCellStyle cellStyle = workbook.createCellStyle();
+			cellStyle.setBorderTop(BorderStyle.THIN);
+			cellStyle.setBorderBottom(BorderStyle.THIN);
+			cellStyle.setBorderRight(BorderStyle.THIN);
+			cellStyle.setBorderLeft(BorderStyle.THIN);
 
 			Sheet sheet = workbook.getSheetAt(2);
 			importDataSheet3(sheet);
@@ -92,7 +101,7 @@ public class FileDownloadController {
 								step3.setStyle(step1.getOrder());
 
 								putIfNotDuplicateValueSheet3Temp(keyTempSheet3,
-										new Sheet3Temp(step3.getDate(), step3.getInternal_code(), step3.getOrde_type(),
+										new Sheet3Temp(step3.getDate(), step3.getInternal_code(), step3.getOrder_type(),
 												step3.getStyle(), step3.getModel_name(), step3.getDestination(),
 												step3.getPrs(), step3.getEta(), step3.getUsage(), step3.getOrder_qty(),
 												step3.getPo(), step3.getVendor_name(), step3.getMtl_code(),
@@ -115,69 +124,93 @@ public class FileDownloadController {
 				//
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getDate());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getInternal_code());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getOrde_type());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getStyle());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getModel_name());
+				cell3.setCellStyle(cellStyle);
+				cellNum3++;
+
+				cell3 = row3.createCell(cellNum3);
+				cell3.setCellValue(step3temp.getDestination());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getPrs());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getEta());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getUsage());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getOrder_qty());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getPo());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getVendor_name());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getMtl_code());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getMaterial_name());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getUnit());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getPrice());
+				cell3.setCellStyle(cellStyle);
 				cellNum3++;
 
 				cell3 = row3.createCell(cellNum3);
 				cell3.setCellValue(step3temp.getEtd());
-
+				cell3.setCellStyle(cellStyle);
 				rowNum3++;
 				cellNum3 = 0;
+			}
+			// set auto size collumn
+			for (int i = 0; i < 22; i++) {
+				sheet.autoSizeColumn(i);
 			}
 			// Write the updated workbook back to the file
 			try (FileOutputStream fileOutputStream = new FileOutputStream(excelFile)) {
@@ -203,7 +236,7 @@ public class FileDownloadController {
 	}
 
 	public void importDataSheet3(Sheet sheet) {
-		String date = "", internal_code = "", orde_type = "", style = "", model_name = "", destination = "", prs = "",
+		String date = "", internal_code = "", order_type = "", style = "", model_name = "", destination = "", prs = "",
 				eta = "", usage = "", order_qty = "", po = "", vendor_name = "", mtl_code = "", material_name = "",
 				unit = "", price = "", etd = "";
 
@@ -229,7 +262,7 @@ public class FileDownloadController {
 			cellNum++;
 
 			cell = row.getCell(cellNum);
-			orde_type = getCellValue(cell).toString();
+			order_type = getCellValue(cell).toString();
 			cellNum++;
 
 			cell = row.getCell(cellNum);
@@ -261,7 +294,7 @@ public class FileDownloadController {
 			cellNum++;
 
 			cell = row.getCell(cellNum);
-			po = getCellValue(cell).toString();
+			po = dataFormatter.formatCellValue(cell);
 			cellNum++;
 
 			cell = row.getCell(cellNum);
@@ -287,7 +320,7 @@ public class FileDownloadController {
 			cell = row.getCell(cellNum);
 			etd = getCellValue(cell).toString();
 
-			step3Map.put(countObj, new Sheet3(date, internal_code, orde_type, style, model_name, destination, prs, eta,
+			step3Map.put(countObj, new Sheet3(date, internal_code, order_type, style, model_name, destination, prs, eta,
 					usage, order_qty, po, vendor_name, mtl_code, material_name, unit, price, etd));
 
 			cellNum = 10;
@@ -361,7 +394,7 @@ public class FileDownloadController {
 
 			cellNum = 4;
 			cell = row.getCell(cellNum);
-			material = getCellValue(cell).toString();
+			material = dataFormatter.formatCellValue(cell);
 
 			step1Map.put(countObj, new Sheet1(order, material, consolidated_Master_Order));
 //			putIfNotDuplicateValue(countObj, new Sheet1(order, material, consolidated_Master_Order));
@@ -399,7 +432,7 @@ public class FileDownloadController {
 			if (DateUtil.isCellDateFormatted(cell)) {
 				return dateFormat.format(cell.getDateCellValue());
 			} else {
-				return (int) cell.getNumericCellValue();
+				return cell.getNumericCellValue();
 			}
 		case BOOLEAN:
 			return cell.getBooleanCellValue();
